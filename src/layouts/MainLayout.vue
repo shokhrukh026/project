@@ -1,6 +1,7 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header elevated style="background: linear-gradient(145deg, #15503e 15%, #133154 70%);">
+    <q-header elevated style="background: dimgray;">
+      <!-- style="background: linear-gradient(145deg, #15503e 15%, #133154 70%);" -->
       <q-toolbar>
         <q-btn
           flat
@@ -17,20 +18,12 @@
         <q-space/>
 
         <div class="q-gutter-sm row items-center no-wrap">
-          <a style="font-size: 30px;" class="float-right" href="https://github.com/sponsors/mayank091193"
-             target="_blank" title="Donate"><i class="fas fa-heart" style="color: #eb5daa"></i></a>
           <q-btn round dense flat icon="apps">
             <q-tooltip>Customize</q-tooltip>
           </q-btn>
           <q-btn round dense flat icon="notifications">
             <q-badge color="red" text-color="white" floating>2</q-badge>
             <q-tooltip>Notifications</q-tooltip>
-          </q-btn>
-          <q-btn round flat>
-            <q-avatar size="26px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png"/>
-            </q-avatar>
-            <q-tooltip>Account</q-tooltip>
           </q-btn>
           <q-btn round dense flat icon="fas fa-sign-out-alt" to="/">
             <q-tooltip>Logout</q-tooltip>
@@ -46,34 +39,15 @@
               mini-to-overlay
               bordered
               content-class="bg-grey-3">
-      <q-list>
-        <q-item active-class="tab-active" to="/home" exact class="q-ma-none navigation-item" clickable v-ripple>
+      <q-list class="text-black">
+        <q-item v-for="(list,index) in drawerList" :key="index" active-class="tab-active" :to="list.link"
+         exact class="q-ma-none navigation-item" clickable v-ripple>
           <q-item-section avatar>
-            <q-icon name="home"/>
+            <q-icon :name="list.icon"/>
           </q-item-section>
 
           <q-item-section>
-            Home
-          </q-item-section>
-        </q-item>
-        <q-item active-class="tab-active" to="/dashboard-grid" exact class="q-ma-none navigation-item" clickable
-                v-ripple>
-          <q-item-section avatar>
-            <q-icon name="dashboard"/>
-          </q-item-section>
-
-          <q-item-section>
-            Dashboard - Grid
-          </q-item-section>
-        </q-item>
-        <q-item active-class="tab-active" to="/dashboard-list" exact class="q-ma-none navigation-item" clickable
-                v-ripple>
-          <q-item-section avatar>
-            <q-icon name="view_headline"/>
-          </q-item-section>
-
-          <q-item-section>
-            Dashboard - List
+            {{list.name}}
           </q-item-section>
         </q-item>
       </q-list>
@@ -94,6 +68,17 @@
             return {
                 leftDrawerOpen: false,
                 miniState: true,
+                drawerList:[
+                  { name: 'Главная', link: '/main', icon: 'home' },
+                  { name: 'Покупка', link: '/accounting', icon: 'shopping_cart' },
+                  { name: 'Продукты', link: '/products', icon: 'view_headline' },
+                  { name: 'Поставшики', link: '/producers', icon: 'local_shipping' },
+                  { name: 'Покупатели', link: '/customers', icon: 'shopping_bag' },
+
+                  { name: 'Dashboard - Grid', link: '/dashboard-grid', icon: 'dashboard' },
+
+
+                ]
             };
         }
     };
@@ -101,7 +86,7 @@
 
 <style>
   .tab-active {
-    background-color: green;
+    background-color: limegreen;
     color: white;
   }
 </style>

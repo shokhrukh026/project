@@ -1,12 +1,23 @@
 const routes = [
-  {path: '/', component: () => import('pages/Homepage.vue')},
+  // {
+  //   path: '/',
+  //   component: () => import('layouts/Empty.vue'),
+  //   children: [{
+  //     path: '',
+  //     component: () => import('pages/Login.vue')
+  //   }]
+  // },
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      {path: '/home', component: () => import('pages/Home.vue')},
+      {path: '/', component: () => import('pages/Main.vue')},
+      {path: '/accounting', component: () => import('pages/Accounting.vue')},
       {path: '/dashboard-grid', component: () => import('pages/DashboardGrid.vue')},
-      {path: '/dashboard-list', component: () => import('pages/DashboardList.vue')}
+      {path: '/products', component: () => import('pages/ProductsList.vue')},
+      {path: '/producers', component: () => import('pages/ProducersList.vue')},
+      {path: '/customers', component: () => import('pages/CustomersList.vue')},
+
     ]
   }
 ]

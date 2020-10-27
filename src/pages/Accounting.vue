@@ -1,25 +1,27 @@
 <template>
   <q-page>
     <div class="row">
-      <div class="col-12">
-        <q-btn
-          v-if="$q.screen.gt.xs"
-          outline
-          dense
-          no-wrap
-          icon="add"
-          no-caps
-          color="green"
-          label="Add Task"
-          class="q-mt-sm q-ml-sm q-pr-sm bg-white"
-          @click="add_new = true"
-        ></q-btn>
-        <q-btn-dropdown
+      {{characters}}hello
+      <div class="col-12 row items-center">
+        <div class="row q-ma-sm col-8">
+        <q-input outlined v-model="text" class="bg-white col-6" dense label="Штрих-код" />
+          <q-btn
+            v-if="$q.screen.gt.xs"
+            outline
+            color="green"
+            label="Добавить"
+            class="q-ml-xs bg-white text-weight-bold"
+            @click="add_new = true"
+          ></q-btn>
+        </div>
+        <q-space/>
+        <div class="q-ma-sm">
+           <q-btn-dropdown
           outline
           dense
           color="primary"
           icon="filter_list"
-          class="q-mt-sm q-ml-sm bg-white"
+          class="bg-white"
           label="Add Filter"
         >
           <q-list>
@@ -42,13 +44,14 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-        <q-input class="float-right q-mt-sm q-mr-sm bg-white" v-model="search" label="Search here" outlined dense
+        </div>
+        <!-- <q-input class="float-right q-mt-sm q-mr-sm bg-white" v-model="search" label="Search here" outlined dense
                  style="width: 35%">
           <template v-slot:append>
             <q-icon v-if="search !== ''" name="close" @click="search = ''" class="cursor-pointer"/>
             <q-icon name="search"/>
           </template>
-        </q-input>
+        </q-input> -->
       </div>
     </div>
     <div class="col-3 q-px-xs">
@@ -58,7 +61,7 @@
           <q-item-section avatar style="min-width:25px">
             <q-icon name="assignment" class="q-pa-none q-ma-none"/>
           </q-item-section>
-          <q-item-section class="text-h6 text-weight-bolder">Tasks</q-item-section>
+          <q-item-section class="text-h6 text-weight-bolder">Продукты</q-item-section>
           <q-item-section avatar>
             <q-icon name="more_vert" class="cursor-pointer">
               <q-menu transition-show="rotate" transition-hide="rotate">
@@ -133,7 +136,7 @@
     <q-dialog v-model="add_new" position="left">
       <q-card style="width: 300px">
         <q-card-section>
-          <div class="text-h6">Add New Task</div>
+          <div class="text-h6">Покупка</div>
         </q-card-section>
         <q-separator/>
         <q-card-section class="row items-center no-wrap">
@@ -197,34 +200,6 @@
                         ],
                         due_date: '20 Jan, 2020'
                     },
-                    {
-                        task_title: "Improvements",
-                        task_type: "enhancement",
-                        id: 2,
-                        tags: [
-                            {name: "js", color: "orange"},
-                            {name: "html", color: "pink"},
-                            {name: "api", color: "teal"}
-                        ],
-                        due_date: '12 Feb, 2020'
-                    },
-                    {
-                        task_title: "Fix the issue in send email",
-                        task_type: "bug",
-                        id: 3,
-                        tags: [{name: "api", color: "teal"}],
-                        due_date: '09 Nov, 2020'
-                    },
-                    {
-                        task_title: "Remove static handling",
-                        task_type: "feature",
-                        id: 4,
-                        tags: [
-                            {name: "js", color: "orange"},
-                            {name: "api", color: "teal"}
-                        ],
-                        due_date: '23 Dec, 2019'
-                    }
                 ],
                 task_in_progress: [
                     {
@@ -237,27 +212,6 @@
                         ],
                         due_date: '12 Dec, 2019'
                     },
-                    {
-                        task_title: "Convert list to grid",
-                        task_type: "feature",
-                        id: 6,
-                        tags: [
-                            {name: "html", color: "pink"},
-                            {name: "api", color: "teal"},
-                            {name: "css", color: "yellow"}
-                        ],
-                        due_date: '23 Dec, 2019'
-                    },
-                    {
-                        task_title: "Update back-end API",
-                        task_type: "feature",
-                        id: 7,
-                        tags: [
-                            {name: "css", color: "yellow"},
-                            {name: "api", color: "teal"}
-                        ],
-                        due_date: '30 Mar, 2019'
-                    }
                 ],
                 task_test: [
                     {
@@ -267,27 +221,6 @@
                         tags: [{name: "api", color: "teal"}],
                         due_date: '05 Mar, 2019'
                     },
-                    {
-                        task_title: "The edit blog functionalities",
-                        task_type: "feature",
-                        id: 6,
-                        tags: [
-                            {name: "html", color: "pink"},
-                            {name: "api", color: "teal"},
-                            {name: "js", color: "orange"}
-                        ],
-                        due_date: '02 Apr, 2020'
-                    },
-                    {
-                        task_title: "Back-end API enhancements",
-                        task_type: "feature",
-                        id: 7,
-                        tags: [
-                            {name: "api", color: "teal"},
-                            {name: "html", color: "pink"}
-                        ],
-                        due_date: '11 Mar, 2019'
-                    }
                 ],
                 task_done: [
                     {
@@ -301,26 +234,6 @@
                         ],
                         due_date: '31 Mar, 2020'
                     },
-                    {
-                        task_title: "Handle issues in front-end linking",
-                        task_type: "bug",
-                        id: 6,
-                        tags: [
-                            {name: "js", color: "orange"},
-                            {name: "html", color: "pink"}
-                        ],
-                        due_date: '18 Mar, 2020'
-                    },
-                    {
-                        task_title: "Manage back-end API calls",
-                        task_type: "feature",
-                        id: 7,
-                        tags: [
-                            {name: "api", color: "teal"},
-                            {name: "css", color: "yellow"}
-                        ],
-                        due_date: '10 Jul, 2020'
-                    }
                 ],
                 task_class: {
                     to_do: 'border-todo',
@@ -338,6 +251,32 @@
         },
         created() {
             this.load_tasks();
+        },
+        apollo:{
+          characters: gql`
+            query getCharacters{
+              characters{
+                id
+                name
+              }
+            }
+          `
+        },
+        async mounted(){
+          
+          // this.$axios.get('http://localhost:4000/')
+          // .then((response) => {
+          //   console.log(response);
+          // })
+          // .catch(() => {
+          //   this.$q.notify({
+          //     color: 'negative',
+          //     position: 'top',
+          //     message: 'Loading failed',
+          //     icon: 'report_problem'
+          //   })
+          // })
+
         },
         computed: {
             dragOptions() {

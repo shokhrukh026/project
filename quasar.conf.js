@@ -55,8 +55,20 @@ module.exports = function (ctx) {
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
-
+      vueRouterMode: 'history', // available values: 'hash', 'history'
+      chainWebpack (chain, { isServer, isClient }) {
+        chain.module.rule('vue')
+        .use('vue-loader')
+        .loader('vue-loader')
+        .tap(options => {
+          options.transpileOptions = {
+            transforms: {
+              dangerousTaggedTemplateString: true
+            }
+          }
+          return options
+        })
+      },
       // rtl: false, // https://quasar.dev/options/rtl-support
       // showProgress: false,
       // gzip: true,
@@ -75,7 +87,17 @@ module.exports = function (ctx) {
     devServer: {
       https: false,
       port: 8080,
-      open: true // opens browser window automatically
+      open: true, // opens browser window automatically
+      proxy: {
+        // proxy all requests starting with /api to jsonplaceholder
+        '/api': {
+          target: 'http://localhost:3000/',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/api': ''
+          }
+        }
+      }
     },
 
     // animations: 'all', // --- includes all animations
@@ -142,7 +164,7 @@ module.exports = function (ctx) {
 
     // Full list of options: https://quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
     electron: {
-      bundler: 'packager', // 'packager' or 'builder'
+      bundler: 'builder', // 'packager' or 'builder'
 
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
