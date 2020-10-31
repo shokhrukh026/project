@@ -6,25 +6,44 @@ export default{
     },
     mutations:{
         SET_PRODUCERS: (state, payload) => {
-            state.products = payload
+            state.producers = payload
+            state.producers.forEach((element, index) => {
+                element.index = index + 1
+            });
         },
     },
     actions: {
         async ADD_PRODUCER({commit}, payload) {
-            console.log(payload);
             return await axios({
                 method: "POST",
                 url: baseUrl + 'producers',
                 data: payload
             })
             .then((e) => {
-            //   return e;
+                console.log(e); 
+                return e.data;
             })
             .catch((error) => {
                 console.log(error);
                 return error.response;
             })
                 
+        },
+        async ADD_PRODUCER_PRODUCT({commit}, payload) {
+            console.log(payload);
+            return await axios({
+                method: "POST",
+                url: baseUrl + 'producers/' + payload.id + '/add/product',
+                data: payload
+            })
+            .then((e) => {
+                console.log(e); 
+                return e.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                return error.response;
+            })
         },
         async GET_PRODUCERS({commit}, payload) {
             return await axios({

@@ -120,18 +120,21 @@
         </q-card-section>
       </q-card>
     </q-dialog>
-    {{getProducts}}
+    {{id}}
   </q-page>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
 export default {
+    name: 'products-id',
+    props:{
+      id: String, Number
+    },
     data() {
         return {
           search: '',
           filter: '',
-          label: 'hello',
           pagination: {
             page: 1,
             rowsPerPage: 5
@@ -154,13 +157,6 @@ export default {
             { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
             { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
             { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            
           ],
             
         };
@@ -175,10 +171,12 @@ export default {
     },
     methods: {
       ...mapActions([
-          'GET_PRODUCTS'
+          'GET_PRODUCTS', 'ADD_PRODUCER_PRODUCT'
       ]),
       async addProductToDB() {
-          // await this.$store.dispatch('ADD_PRODUCT');
+          let product = this.item;
+          product.id = this.id
+          await this.ADD_PRODUCER_PRODUCT(product)
       },
     }
 };

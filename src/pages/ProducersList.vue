@@ -66,7 +66,9 @@
       <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn dense round flat color="grey" @click="editRow(props)" icon="edit"></q-btn>
-            <q-btn dense round flat color="grey" @click="deleteRow(props)" icon="delete"></q-btn>
+            <q-btn dense round flat color="grey" icon="info" :to="{ name: 'products-id', params: { id: props.row._id }}"></q-btn> 
+            
+            <q-btn dense round flat color="grey" @click="deleteRow()" icon="delete"></q-btn>
           </q-td>
       </template>
     
@@ -99,8 +101,8 @@
         <q-card-section>
           <q-form class="row full-width">
             <q-input filled v-model="item.name" label="Ф.И.О." class="col-12 q-pa-sm"/>
-            <q-input filled v-model="item.phone" label="Номер телефона" class="col-6 q-pa-sm"/>
-            <q-input filled v-model="item.amount" label="Название компании" class="col-6 q-pa-sm"/>
+            <q-input filled v-model="item.phone" type="number" label="Номер телефона" class="col-6 q-pa-sm"/>
+            <q-input filled v-model="item.companyName" label="Название компании" class="col-6 q-pa-sm"/>
 
             <div class="col-12 row justify-end q-pa-sm">
               <q-btn @click="add_new=!add_new" label="Отменить" color="primary"/>
@@ -117,6 +119,7 @@
       </q-card>
     </q-dialog>
     {{getProducers}}
+    {{data}}
   </q-page>
 </template>
 
@@ -127,7 +130,6 @@ export default {
         return {
           search: '',
           filter: '',
-          label: 'hello',
           pagination: {
             page: 1,
             rowsPerPage: 5
@@ -135,34 +137,21 @@ export default {
           add_new: false,
           item: {name: '', phone: null, companyName: ''},
           columns: [
-            { name: 'name', align: 'center', label: 'Name', field: 'name', sortable: true },
-            { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
-            { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-            { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-            { name: 'protein', label: 'Protein (g)', field: 'protein' },
-            { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-            { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-            { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-            { name: 'actions', label: 'Действия', field: '', align:'center' },
+            { name: 'index', align: 'left', label: '#', field: 'index', sortable: true },
+            { name: 'name', align: 'center', label: 'Ф.И.О.', field: 'name', sortable: true },
+            { name: 'phone', align: 'center', label: 'Номер телефона', field: 'phone', sortable: true,  },
+            { name: 'companyName', align:'center',  label: 'Название компании', field: 'companyName', sortable: true},
+            { name: 'actions', align:'center', label: 'Действия', field: '' },
           ],
           data: [
             { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%'},
-            
           ],
             
         };
     },
     async mounted() {
-      // await this.GET_PRODUCTS();
+      await this.GET_PRODUCERS();
+      this.data = await this.getProducers;
     },
     computed: {
         ...mapGetters([
@@ -171,7 +160,7 @@ export default {
     },
     methods: {
       ...mapActions([
-          'ADD_PRODUCER'
+          'ADD_PRODUCER', 'GET_PRODUCERS'
       ]),
       async addProducerToDB() {
           await this.ADD_PRODUCER(this.item)

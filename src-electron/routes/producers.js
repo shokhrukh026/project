@@ -32,18 +32,25 @@ router.post('/', async (req, res) => {
         res.status(400).json({message: error.message})
     }
 })
-//Add product to producer
-// router.post('/', async (req, res) => {
-//     const producer = new Producer({
-//         productArr: req.body.productArr
-//     })
-//     try {
-//         const newCustomer = await producer.save()
-//         res.status(201).json(newCustomer)
-//     } catch (error) {
-//         res.status(400).json({message: error.message})
-//     }
-// })
+// Add product to producer
+router.post('/:id/add/product', getProducer, async (req, res) => {
+    // const producer = new Producer({
+    //     productArr: req.body.productArr
+    // })
+    // try {
+    //     const newCustomer = await producer.save()
+    //     res.status(201).json(newCustomer)
+    // } catch (error) {
+    //     res.status(400).json({message: error.message})
+    // }
+    res.producer.productArr.push(req.body.productArr)
+    try {
+        const updatedCustomer = await res.producer.save()
+        res.json(updatedCustomer)
+    } catch (error) {
+        res.status(400).json({message: error.message})
+    }
+})
 
 // //Updating one
 // router.patch('/', getProducer, async (req, res) => {
@@ -70,10 +77,11 @@ router.post('/', async (req, res) => {
 
 async function getProducer(req, res, next){
     let producer;
+    console.log(req.params.id);
     try {
         producer = await Producer.findById(req.params.id)
-        .populate(product)
-        .exec(function (err, element) {
+        .populate('product')
+        .then(function (err, element) {
             if (err) return res.status(404).json({ message: 'Cannot find producer', error: err })
             console.log('The producer is %s', element);
         });

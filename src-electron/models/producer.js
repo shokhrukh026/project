@@ -5,11 +5,11 @@ const schema = new mongoose.Schema({
     // _id: new mongoose.Schema.Types.ObjectId(),
     name: String,
     phone: Number,
-    companyName: String
-    // productArr: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: products
-    // }]
+    companyName: String,
+    productArr: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: products
+    }]
 })
 
 module.exports = mongoose.model('producers', schema)

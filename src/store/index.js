@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import user from './user'
 import business from './business'
 import producers from "./producers";
+import customers from './customers'
 
 Vue.use(Vuex)
 
@@ -21,7 +22,8 @@ export default function (/* { ssrContext } */) {
     modules: {
       user,
       business,
-      producers
+      producers,
+      customers
     },
 
     // enable strict mode (adds overhead!)
