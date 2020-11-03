@@ -14,7 +14,8 @@ const routes = [
       {path: '/', component: () => import('pages/Main.vue')},
       {path: '/accounting', component: () => import('pages/Accounting.vue')},
       {path: '/dashboard-grid', component: () => import('pages/DashboardGrid.vue')},
-      {path: '/products/:id', name: 'products-id', component: () => import('pages/ProductsList.vue'), props: true },
+      {path: '/products/:id', name: 'products', component: () => import('pages/ProductsList.vue'), props: true },
+      {path: '/products-buy/:id', name: 'products-buy', component: () => import('pages/ProductsBuy.vue'), props: true },
       {path: '/producers', component: () => import('pages/ProducersList.vue')},
       {path: '/customers', component: () => import('pages/CustomersList.vue')},
 

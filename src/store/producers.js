@@ -27,14 +27,48 @@ export default{
                 console.log(error);
                 return error.response;
             })
-                
+        },
+        async EDIT_PRODUCER({commit}, payload){
+            return await axios({
+                method: "PATCH",
+                url: baseUrl + `producers/${payload.id}`,
+                data: {
+                    name: payload.name,
+                    phone: payload.phone,
+                    companyName: payload.companyName
+                }
+            })
+            .then((e) => {
+                console.log(e); 
+                return e.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                return error.response;
+            })
+        },
+        async DELETE_PRODUCER({commit}, payload){
+            return await axios({
+                method: "DELETE",
+                url: baseUrl + `producers/${payload.id}`,
+            })
+            .then((e) => {
+                console.log(e); 
+                return e.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                return error.response;
+            })
         },
         async ADD_PRODUCER_PRODUCT({commit}, payload) {
             console.log(payload);
             return await axios({
                 method: "POST",
                 url: baseUrl + 'producers/' + payload.id + '/add/product',
-                data: payload
+                data: {
+                    productArr: payload
+                }
             })
             .then((e) => {
                 console.log(e); 
@@ -59,9 +93,7 @@ export default{
                 console.log(error);
                 return 'error';
             })
-                
         },
-       
     },
     getters:{
         getProducers: state => state.producers

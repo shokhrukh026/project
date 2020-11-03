@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import user from './user'
-import business from './business'
-import producers from "./producers";
+import producers from "./producers"
 import customers from './customers'
+import products from './products'
 
 Vue.use(Vuex)
 
@@ -21,9 +21,9 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       user,
-      business,
       producers,
-      customers
+      customers,
+      products
     },
 
     // enable strict mode (adds overhead!)
