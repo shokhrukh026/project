@@ -78,6 +78,42 @@ export default{
                 return error.response;
             })
         },
+        async EDIT_PRODUCT_OF_CUSTOMER({commit}, payload){
+            return await axios({
+                method: "PATCH",
+                url: baseUrl + `customers/${payload.id}/product/${payload.pid}`,
+                data: {
+                    barcode: payload.barcode,
+                    name: payload.name,
+                    amount: payload.amount,
+                    buyPrice: payload.buyPrice,
+                    sellPrice: payload.sellPrice,
+                    description: payload.description,
+                }
+            })
+            .then((e) => {
+                console.log(e); 
+                return e.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                return error.response;
+            })
+        },
+        async DELETE_PRODUCT_OF_CUSTOMERS({commit}, payload){
+            return await axios({
+                method: "DELETE",
+                url: baseUrl + `customers/${payload.id}/product/${payload.pid}`,
+            })
+            .then((e) => {
+                console.log(e); 
+                return e.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                return error.response;
+            })
+        },
         async GET_CUSTOMERS({commit}, payload) {
             return await axios({
                 method: "GET",

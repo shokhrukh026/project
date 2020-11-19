@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const Customer = require('../models/customer')
-const Product = require('../models/product')
+const Product_producer = require('../models/product-producer')
+const Product_customer = require('../models/product-customer')
+
 
 //Getting all customers
 router.get('/', async (req, res) => {
@@ -12,7 +14,6 @@ router.get('/', async (req, res) => {
         res.status(500).json({message: error.message});
     }
 })
-
 //Getting customer's products
 router.get('/:id/products', async (req, res) => {
     try{
@@ -27,12 +28,10 @@ router.get('/:id/products', async (req, res) => {
         res.status(500).json({message: error.message})
     }
 })
-
 //Getting one
 router.get('/:id', getCustomer, (req, res) => {
     res.json(res.customer)
 })
-
 //Creating one
 router.post('/', async (req, res) => {
     const customer = new Customer({
@@ -50,7 +49,9 @@ router.post('/', async (req, res) => {
 // Add product to customer
 router.post('/:id/add/product', async (req, res) => {
     try {
-        let product = await Product.findOne({name: req.body.productArr.name})
+        console.log(req.body.productArr);
+        let productNew = await new Product_customer(req.body.productArr)
+        let product = await Product_producer.findOne({name: req.body.productArr.name})
 
         await Customer.findById(req.params.id)
         .populate('productArr')
@@ -58,9 +59,11 @@ router.post('/:id/add/product', async (req, res) => {
             if (error) return res.status(400).json({message: error.message})
             product.amount = product.amount - req.body.productArr.amount
             await product.save();
-            product.amount = req.body.productArr.amount
-            element.productArr.push(product);
-            const updatedCustomer = await element.save()
+            await productNew.save();
+            console.log(element);
+            await element.productArr.push(productNew);
+            console.log(productNew);
+            const updatedCustomer = await element.save();
             res.json(updatedCustomer)
         });
     } catch (error) {
@@ -92,7 +95,7 @@ router.patch('/:id', async (req, res) => {
 
 //Update one product of customer
 router.patch('/:id/product/:pid', async (req, res) => {
-    let product = await Product.findById(req.params.pid);
+    let product = await Product_customer.findById(req.params.pid);
     switch (true) { 
         case req.body.barcode != null:
             product.barcode = req.body.barcode
@@ -132,7 +135,7 @@ router.delete('/:id', async (req, res) => {
 //Delete one product of customer
 router.delete('/:id/product/:pid', async (req, res) => {
     try {
-        let product = await Product.findById(req.params.pid)
+        let product = await Product_customer.findById(req.params.pid)
 
         await Customer.findById(req.params.id)
         .populate('productArr')

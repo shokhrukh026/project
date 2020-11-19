@@ -13,6 +13,32 @@ export default{
         },
     },
     actions: {
+        async ADD_PRODUCER_PRODUCT_DETAIL({commit}, payload) {
+            return await axios({
+                method: "POST",
+                url: baseUrl + `producers/product/${payload.product_id}/add/detail/`,
+                data: {
+                    productDetailArr: {
+                        date: payload.date,
+                        amount: payload.amount, 
+                        amountLeft: payload.amount,
+                        buyPrice: payload.buyPrice, 
+                        sellPrice: payload.sellPrice, 
+                        payed: payload.payed,
+                        unPayed: payload.unPayed,
+                        about: payload.about
+                    }
+                }
+            })
+            .then((e) => {
+                console.log(e); 
+                return e.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                return error.response;
+            })
+        },
         async ADD_PRODUCER({commit}, payload) {
             return await axios({
                 method: "POST",
@@ -62,7 +88,6 @@ export default{
             })
         },
         async ADD_PRODUCER_PRODUCT({commit}, payload) {
-            console.log(payload);
             return await axios({
                 method: "POST",
                 url: baseUrl + 'producers/' + payload.id + '/add/product',

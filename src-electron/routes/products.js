@@ -1,11 +1,11 @@
 const express = require('express')
 const router = express.Router()
-const Product = require('../models/product')
+const Product_producer = require('../models/product-producer')
 
 //Getting all
 router.get('/', async (req, res) => {
     try{
-        const products = await Product.find()
+        const products = await Product_producer.find()
         res.json(products)
     }catch(error){
         res.status(500).json({message: error.message})
@@ -19,7 +19,7 @@ router.get('/:id', getProduct, (req, res) => {
 router.get('/filter/by/:name', async (req, res) => {
     let product;
     try {
-        product = await Product.find({name: { "$regex": req.params.name, "$options": "i" }});
+        product = await Product_producer.find({name: { "$regex": req.params.name, "$options": "i" }});
         res.json(product)
     } catch (error) {
         res.status(500).json({message: error.message})
@@ -27,7 +27,7 @@ router.get('/filter/by/:name', async (req, res) => {
 })
 //Creating one
 router.post('/', async (req, res) => {
-    const product = new Product({
+    const product = new Product_producer({
         barcode: req.body.barcode,
         name: req.body.name,
         amount: req.body.amount,
@@ -42,6 +42,13 @@ router.post('/', async (req, res) => {
         res.status(400).json({message: error.message})
     }
 })
+
+
+
+
+
+
+
 // //Updating one
 // router.patch('/', getProduct, async (req, res) => {
 //     if(req.body.name != null){
@@ -61,7 +68,7 @@ router.post('/', async (req, res) => {
 // router.delete('/:id', getProduct, async (req, res) => {
 //     try {
 //         await res.product.remove()
-//         res.json({message: 'Deleted Product'})
+//         res.json({message: 'Deleted Product_producer'})
 //     } catch (error) {
 //         res.status(500).json({message: error.message})
 //     }
@@ -70,7 +77,7 @@ router.post('/', async (req, res) => {
 async function getProduct(req, res, next){
     let product
     try {
-        product = await Product.findById(req.params.id)
+        product = await Product_producer.findById(req.params.id)
         if(product == null){
             return res.status(404).json({ message: 'Cannot find product' })
         }

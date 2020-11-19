@@ -1,14 +1,23 @@
 const mongoose = require('mongoose')
-const products = require('./product')
+const Product_producer = require('./product-producer')
 
 const schema = new mongoose.Schema({
     // _id: new mongoose.Schema.Types.ObjectId(),
-    name: String,
-    phone: Number,
-    companyName: String,
+    name: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: Number,
+        required: false,
+    },
+    companyName: {
+        type: String,
+        required: false,
+    },
     productArr: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: products
+        ref: Product_producer
     }]
 })
 

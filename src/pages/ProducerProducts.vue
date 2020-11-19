@@ -67,12 +67,13 @@
       <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn dense round flat color="grey" @click="editRow(props.row)" icon="edit"></q-btn>
+            <q-btn dense round flat color="grey" icon="info" :to="{ name: 'producer-product-detail', params: { uid: id, product: props.row }}"></q-btn> 
             <q-btn dense round flat color="grey" @click="deleteRow(props.row)" icon="delete"></q-btn>
           </q-td>
       </template>
     
       <template v-slot:top="props">
-        <q-icon name="shopping_basket" class="text-grey-7 text-h4"></q-icon>
+        <q-icon name="store" class="text-grey-7 text-h4"></q-icon>
         <span class="text-h6 q-ml-sm text-grey-9 text-weight-bold">Продукты</span>
         <q-space />
         <q-input borderless dense debounce="300" color="primary" v-model="filter"
@@ -99,16 +100,18 @@
         <q-separator/>
         <q-card-section>
           <q-form class="row full-width">
-            <q-input filled v-model="item.barcode" type="number" label="Штрих код" class="col-12 q-pa-sm"/>
             <q-input filled v-model="item.name" label="Название" class="col-6 q-pa-sm"/>
+            <q-input filled v-model="item.barcode" type="number" label="Штрих код" class="col-6 q-pa-sm"/>
             <q-input filled v-model="item.amount" type="number" label="Кол-во" class="col-6 q-pa-sm"/>
-            <q-input filled v-model="item.buyPrice" type="number" label="Цена покупки" class="col-6 q-pa-sm"/>
-            <q-input filled v-model="item.sellPrice" type="number" label="Цена продажи" class="col-6 q-pa-sm"/>
+            <q-input filled v-model="item.measure" label="Единица измерения" class="col-6 q-pa-sm"/>
+
+            <!-- <q-input filled v-model="item.buyPrice" type="number" label="Цена покупки" class="col-6 q-pa-sm"/> -->
+            <!-- <q-input filled v-model="item.sellPrice" type="number" label="Цена продажи" class="col-6 q-pa-sm"/> -->
             <q-input filled v-model="item.description" label="Описание" autogrow class="col-12 q-pa-sm"/>
 
             
             <div class="col-12 row justify-end q-pa-sm">
-              <q-btn @click="add_new=!add_new" label="Отменить" color="primary"/>
+              <q-btn v-close-popup @click="cleanItem" label="Отменить" color="primary"/>
               <q-btn
                 @click="addProductToDB"
                 class="q-ml-sm"
@@ -121,7 +124,7 @@
         </q-card-section>
       </q-card>
     </q-dialog>
-
+{{item}}
     <q-dialog v-model="dialogEdit" position="left">
       <q-card>
         <q-card-section>
@@ -130,16 +133,18 @@
         <q-separator/>
         <q-card-section>
           <q-form class="row full-width">
-            <q-input filled v-model="item.barcode" type="number" label="Штрих код" class="col-12 q-pa-sm"/>
             <q-input filled v-model="item.name" label="Название" class="col-6 q-pa-sm"/>
+            <q-input filled v-model="item.barcode" type="number" label="Штрих код" class="col-6 q-pa-sm"/>
             <q-input filled v-model="item.amount" type="number" label="Кол-во" class="col-6 q-pa-sm"/>
-            <q-input filled v-model="item.buyPrice" type="number" label="Цена покупки" class="col-6 q-pa-sm"/>
-            <q-input filled v-model="item.sellPrice" type="number" label="Цена продажи" class="col-6 q-pa-sm"/>
+            <q-input filled v-model="item.measure" label="Единица измерения" class="col-6 q-pa-sm"/>
+
+            <!-- <q-input filled v-model="item.buyPrice" type="number" label="Цена покупки" class="col-6 q-pa-sm"/> -->
+            <!-- <q-input filled v-model="item.sellPrice" type="number" label="Цена продажи" class="col-6 q-pa-sm"/> -->
             <q-input filled v-model="item.description" label="Описание" autogrow class="col-12 q-pa-sm"/>
 
             
             <div class="col-12 row justify-end q-pa-sm">
-              <q-btn @click="dialogEdit=!dialogEdit" label="Отменить" color="primary"/>
+              <q-btn v-close-popup @click="cleanItem" label="Отменить" color="primary"/>
               <q-btn
                 @click="editProduct"
                 class="q-ml-sm"
@@ -191,15 +196,24 @@ export default {
           add_new: false,
           dialogEdit: false,
           dialogDelete: false,
-          item: {barcode: null, name: '', amount: null, buyPrice: null, sellPrice: null, description: ''},
+          item: {
+            barcode: null,
+            name: '',
+            amount: null,
+            measure: '',
+            // sellPrice: null,
+            // description: null,
+            description: ''
+          },
           columns: [
             { name: 'index', align: 'center', label: 'No#', field: 'index', sortable: true },
             { name: 'barcode', align: 'center', label: 'Штрих-код', field: 'barcode', sortable: true },
             { name: 'name', align: 'center', label: 'Название', field: 'name', sortable: true },
-            { name: 'amount', align: 'center', label: 'Кол-во', field: 'amount', sortable: true },
-            { name: 'buyPrice', align: 'center', label: 'Цена покупки', field: 'buyPrice', sortable: true },
-            { name: 'sellPrice', align: 'center', label: 'Цена продажи', field: 'sellPrice', sortable: true },
-            { name: 'description', align: 'center', label: 'Описание', field: 'description', sortable: true },
+            { name: 'amount', align: 'center', label: 'Общее кол-во', field: 'amount', sortable: true },
+            { name: 'measure', align: 'center', label: 'Ед. измерения', field: 'measure', sortable: true },
+            // { name: 'buyPrice', align: 'center', label: 'Цена покупки', field: 'buyPrice', sortable: true },
+            // { name: 'sellPrice', align: 'center', label: 'Цена продажи', field: 'sellPrice', sortable: true },
+            // { name: 'description', align: 'center', label: 'Описание', field: 'description', sortable: true },
             { name: 'actions', label: 'Действия', field: '', align:'center' },
           ],
           data: [],
@@ -222,12 +236,23 @@ export default {
         await this.GET_PRODUCTS_OF_PRODUCERS(this.id);
         this.data = await this.getProductsOfProducers
       },
+      cleanItem(){
+         Object.assign(this.item, {
+          barcode: null,
+          name: '',
+          amount: null,
+          measure: '',
+          // sellPrice: null,
+          // description: null,
+          description: ''
+        })
+      },
       async addProductToDB() {
         let product = this.item;
         product.id = this.id
         await this.ADD_PRODUCER_PRODUCT(product)
         await this.refresh();
-        Object.assign(this.item, {barcode: null, name: '', amount: null, buyPrice: null, sellPrice: null, description: ''})
+        this.cleanItem();
       },
       async editRow(props){
         this.dialogEdit = !this.dialogEdit
@@ -236,8 +261,9 @@ export default {
           barcode: props.barcode,
           name: props.name,
           amount: props.amount,
-          buyPrice: props.buyPrice,
-          sellPrice: props.sellPrice,
+          measure: props.measure,
+          // buyPrice: props.buyPrice,
+          // sellPrice: props.sellPrice,
           description: props.description,
           pid: props._id,
           id: this.id

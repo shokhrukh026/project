@@ -2,7 +2,7 @@
   <q-page>
     <div class="row">
       <div class="col-12 q-pa-sm">
-        <q-btn icon="arrow_back" class="bg-white" outline style="color: grey;" to="/customers"></q-btn>
+        <q-btn icon="arrow_back" class="bg-white" outline style="color: grey;" :to="`/customer/products/${uid}`"></q-btn>
         <q-btn
           v-if="$q.screen.gt.xs"
           outline
@@ -67,13 +67,14 @@
       <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn dense round flat color="grey" @click="editRow(props.row)" icon="edit"></q-btn>
+            <q-btn dense round flat color="grey" icon="info" ></q-btn> 
             <q-btn dense round flat color="grey" @click="deleteRow(props.row)" icon="delete"></q-btn>
           </q-td>
       </template>
     
       <template v-slot:top="props">
         <q-icon name="shopping_basket" class="text-grey-7 text-h4"></q-icon>
-        <span class="text-h6 q-ml-sm text-grey-9 text-weight-bold">Продукты</span>
+        <span class="text-h6 q-ml-sm text-grey-9 text-weight-bold">Продукт {{uid}}</span>
         <q-space />
         <q-input borderless dense debounce="300" color="primary" v-model="filter"
          placeholder="Искать" style="border: 1px solid silver; padding: 0 10px; border-radius: 5px;">
@@ -99,44 +100,22 @@
         <q-separator/>
         <q-card-section>
           <q-form class="row full-width">
-            <q-select
-                filled
-                v-model="item.name"
-                use-input
-                hide-selected
-                fill-input
-                input-debounce="300"
-                :options="options"
-                @filter="filterFn"
-                hint="Товар"
-                class="col-6 q-pa-sm q-mb-xl"
-            >
-                <template v-slot:no-option>
-                <q-item>
-                    <q-item-section class="text-grey">
-                    No results
-                    </q-item-section>
-                </q-item>
-                </template>
-            </q-select>
-            <q-input filled v-model="item.amount" type="number" hint="Кол-во" label="Кол-во" class="col-6 q-pa-sm q-mb-xl" :suffix="item.maxAmount.toString()" min="0" :max="item.maxAmount"/>
-            <!-- <q-input filled v-model="item.barcode" type="number" label="Штрих код" class="col-12 q-pa-sm"/>
+            <q-input filled v-model="item.barcode" type="number" label="Штрих код" class="col-12 q-pa-sm"/>
             <q-input filled v-model="item.name" label="Название" class="col-6 q-pa-sm"/>
             <q-input filled v-model="item.amount" type="number" label="Кол-во" class="col-6 q-pa-sm"/>
             <q-input filled v-model="item.buyPrice" type="number" label="Цена покупки" class="col-6 q-pa-sm"/>
             <q-input filled v-model="item.sellPrice" type="number" label="Цена продажи" class="col-6 q-pa-sm"/>
-            <q-input filled v-model="item.description" label="Описание" autogrow class="col-12 q-pa-sm"/> -->
+            <q-input filled v-model="item.description" label="Описание" autogrow class="col-12 q-pa-sm"/>
 
             
             <div class="col-12 row justify-end q-pa-sm">
               <q-btn @click="add_new=!add_new" label="Отменить" color="primary"/>
               <q-btn
-                @click="addProduct"
+                @click="addProductToDB"
                 class="q-ml-sm"
                 label="Добавить"
                 type="submit"
                 color="green"
-                :disable="item.amount == 0"
               />
             </div>
           </q-form>
@@ -191,9 +170,8 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    {{options}}
+    {{getProductsOfProducers}}
     {{id}}
-    {{getAllProducts}}
   </q-page>
 </template>
 
@@ -201,7 +179,8 @@
 import { mapGetters, mapActions } from 'vuex';
 export default {
     props:{
-      id: [String, Number]
+      product_id: [String, Number],
+      uid: [String, Number]
     },
     data() {
         return {
@@ -214,9 +193,7 @@ export default {
           add_new: false,
           dialogEdit: false,
           dialogDelete: false,
-          item: {barcode: null, name: '', amount: 0, buyPrice: null, sellPrice: null, description: '', maxAmount: 0},
-          options: [],
-          products: [],
+          item: {barcode: null, name: '', amount: null, buyPrice: null, sellPrice: null, description: ''},
           columns: [
             { name: 'index', align: 'center', label: 'No#', field: 'index', sortable: true },
             { name: 'barcode', align: 'center', label: 'Штрих-код', field: 'barcode', sortable: true },
@@ -232,59 +209,25 @@ export default {
         };
     },
     async mounted() {
-      await this.refresh();
-    },
-    watch: {
-      'item.name':{
-        handler(value){
-          if(value != ''){
-            let chosenProduct = this.products.filter((element) => element.name == value)
-            this.item.maxAmount = chosenProduct[0].amount;
-          }
-        },deep: true
-      },
-      'item.amount':{
-        handler(value){
-          if(value > this.item.maxAmount){
-            this.item.amount = 0;
-          }
-        },deep: true
-      },
-
+      // await this.refresh();
     },
     computed: {
         ...mapGetters([
-          'getAllProducts', 'getProductsOfCustomers'
+          'getProductsOfProducers'
         ])
     },
     methods: {
       ...mapActions([
-          'GET_ALL_PRODUCTS', 'ADD_CUSTOMER_PRODUCT', 'DELETE_PRODUCT', 'EDIT_PRODUCT', 'FILTER_PRODUCTS_BY_NAME', 'GET_PRODUCTS_OF_CUSTOMERS'
+          'GET_PRODUCTS_OF_PRODUCERS', 'ADD_PRODUCER_PRODUCT', 'DELETE_PRODUCT', 'EDIT_PRODUCT'
       ]),
-      filterFn (val, update, abort) {
-          update(async () => {
-              // const needle = val.toLowerCase()
-              if(val.length > 2){
-                this.products = await this.FILTER_PRODUCTS_BY_NAME(val)
-                console.log(this.products)
-                this.options = this.products.map((element) => element.name)
-              }
-              // this.options = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
-          })
-      },
       async refresh(){
-        await this.GET_PRODUCTS_OF_CUSTOMERS(this.id);
-        this.data = await this.getProductsOfCustomers
-
-        // await this.GET_ALL_PRODUCTS();
-        // this.options = await this.getAllProducts.map(element => {
-        //     return element.name
-        // });
+        await this.GET_PRODUCTS_OF_PRODUCERS(this.id);
+        this.data = await this.getProductsOfProducers
       },
-      async addProduct() {
+      async addProductToDB() {
         let product = this.item;
         product.id = this.id
-        await this.ADD_CUSTOMER_PRODUCT(product)
+        await this.ADD_PRODUCER_PRODUCT(product)
         await this.refresh();
         Object.assign(this.item, {barcode: null, name: '', amount: null, buyPrice: null, sellPrice: null, description: ''})
       },
