@@ -72,12 +72,11 @@
                   { name: 'Главная', link: '/main', icon: 'home' },
                   { name: 'Покупка', link: '/accounting', icon: 'shopping_cart' },
                   { name: 'Продукты', link: '/products', icon: 'view_headline' },
-                  { name: 'Поставшики', link: '/producers', icon: 'local_shipping' },
-                  { name: 'Покупатели', link: '/customers', icon: 'shopping_bag' },
+                  { name: 'Поставщики', link: '/producers', icon: 'local_shipping' },
+                  { name: 'Покупатели', link: '/customers', icon: 'groups' },
+                  { name: 'Возвраты', link: '/return', icon: 'system_update_alt' },
 
                   { name: 'Dashboard - Grid', link: '/dashboard-grid', icon: 'dashboard' },
-
-
                 ]
             };
         }

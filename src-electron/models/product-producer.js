@@ -10,9 +10,9 @@ const schema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    amount: {
-        type: Number,
-        required: true,
+    totalAmountLeft: {
+        type: String,
+        required: false,
     },
     measure: {
         type: String,
@@ -22,10 +22,10 @@ const schema = new mongoose.Schema({
     //     type: Number,
     //     required: true,
     // },
-    // sellPrice: {
-    //     type: Number,
-    //     required: false,
-    // },
+    sellPrice: {
+        type: String,
+        required: true,
+    },
     description: {
         type: String,
         required: false,

@@ -82,14 +82,22 @@ export default{
             return await axios({
                 method: "PATCH",
                 url: baseUrl + `customers/${payload.id}/product/${payload.pid}`,
-                data: {
-                    barcode: payload.barcode,
-                    name: payload.name,
-                    amount: payload.amount,
-                    buyPrice: payload.buyPrice,
-                    sellPrice: payload.sellPrice,
-                    description: payload.description,
-                }
+                data: payload
+            })
+            .then((e) => {
+                console.log(e); 
+                return e.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                return error.response;
+            })
+        },
+        async RETURN_PRODUCT_OF_CUSTOMER({commit}, payload){
+            return await axios({
+                method: "POST",
+                url: baseUrl + `customers/${payload.cid}/add/product/return/${payload.pid}`,
+                data: payload
             })
             .then((e) => {
                 console.log(e); 

@@ -18,35 +18,35 @@
           color="primary"
           icon="filter_list"
           class="bg-white q-ml-sm text-weight-bold"
-          label="Add Filter"
+          label="Фильтры"
         >
           <q-list>
             <q-item clickable v-close-popup>
               <q-item-section>
-                <q-item-label>Filter 1</q-item-label>
+                <q-item-label>Фильтр 1</q-item-label>
               </q-item-section>
             </q-item>
 
             <q-item clickable v-close-popup>
               <q-item-section>
-                <q-item-label>Filter 2</q-item-label>
+                <q-item-label>Фильтр 2</q-item-label>
               </q-item-section>
             </q-item>
 
             <q-item clickable v-close-popup>
               <q-item-section>
-                <q-item-label>Filter 3</q-item-label>
+                <q-item-label>Фильтр 3</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
         </q-btn-dropdown>
-        <q-input class="float-right q-mt-sm q-mr-sm bg-white" v-model="search" label="Search here" outlined dense
+        <!-- <q-input class="float-right q-mt-sm q-mr-sm bg-white" v-model="search" label="Search here" outlined dense
                  style="width: 35%">
           <template v-slot:append>
             <q-icon v-if="search !== ''" name="close" @click="search = ''" class="cursor-pointer"/>
             <q-icon name="search"/>
           </template>
-        </q-input>
+        </q-input> -->
       </div>
     </div>
     <div class="col-12 q-ma-sm">
@@ -66,7 +66,7 @@
       <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn dense round flat color="grey" @click="dialogOpen('Edit', props)" icon="edit"></q-btn>
-            <q-btn dense round flat color="grey" icon="info" :to="{ name: 'customer-products', params: { id: props.row._id }}"></q-btn> 
+            <q-btn dense round flat color="grey" icon="info" :to="{ name: 'customer-products', params: { uid: props.row._id }}"></q-btn> 
             
             <q-btn dense round flat color="grey" @click="dialogOpen('Delete', props)" icon="delete"></q-btn>
           </q-td>
@@ -98,7 +98,7 @@
     <q-dialog v-model="dialogAdd" position="left">
       <q-card>
         <q-card-section>
-          <div class="text-h6 text-weight-bold q-pl-sm">Добавить покупателя</div>
+          <div class="text-h6 text-weight-bold q-pl-sm">Добавление покупателя</div>
         </q-card-section>
         <q-separator/>
         <q-card-section>
@@ -122,10 +122,10 @@
       </q-card>
     </q-dialog>
 
-     <q-dialog v-model="dialogEdit" position="right">
+     <q-dialog v-model="dialogEdit" position="left">
       <q-card>
         <q-card-section>
-          <div class="text-h6 text-weight-bold q-pl-sm">Редактировать покупателя</div>
+          <div class="text-h6 text-weight-bold q-pl-sm">Редактирование покупателя</div>
         </q-card-section>
         <q-separator/>
         <q-card-section>
@@ -139,7 +139,7 @@
               <q-btn
                 @click="editCustomer"
                 class="q-ml-sm"
-                label="Добавить"
+                label="Изменить"
                 type="submit"
                 color="green"
               />
@@ -179,7 +179,7 @@ export default {
           filter: '',
           pagination: {
             page: 1,
-            rowsPerPage: 5
+            rowsPerPage: 10
           },
           dialogAdd: false,
           dialogEdit: false,

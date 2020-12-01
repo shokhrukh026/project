@@ -7,21 +7,21 @@ const schema = new mongoose.Schema({
         // default: Date.now
     },
     amount: {
-        type: String,
+        type: Number,
         required: true,
     },
     amountLeft: {
-        type: String,
+        type: Number,
         required: true,
     },
     buyPrice: {
         type: String,
         required: true,
     },
-    sellPrice: {
-        type: String,
-        required: false,
-    },
+    // sellPrice: {
+    //     type: String,
+    //     required: false,
+    // },
     payed: {
         type: String,
         required: false,

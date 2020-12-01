@@ -3,6 +3,8 @@ const router = express.Router()
 const Customer = require('../models/customer')
 const Product_producer = require('../models/product-producer')
 const Product_customer = require('../models/product-customer')
+const Product_producer_detail = require('../models/product-producer-detail')
+const Product_customer_return = require('../models/product-customer-return')
 
 
 //Getting all customers
@@ -28,6 +30,15 @@ router.get('/:id/products', async (req, res) => {
         res.status(500).json({message: error.message})
     }
 })
+//Getting all returned products
+router.get('/get/all/return/products', async (req, res) => {
+    try{
+        const return_products = await Product_customer_return.find();
+        res.json(return_products);
+    }catch(error){
+        res.status(500).json({message: error.message});
+    }
+})
 //Getting one
 router.get('/:id', getCustomer, (req, res) => {
     res.json(res.customer)
@@ -49,23 +60,56 @@ router.post('/', async (req, res) => {
 // Add product to customer
 router.post('/:id/add/product', async (req, res) => {
     try {
-        console.log(req.body.productArr);
         let productNew = await new Product_customer(req.body.productArr)
-        let product = await Product_producer.findOne({name: req.body.productArr.name})
+        await Product_producer.findOne({_id: req.body.productArr.product_id})
+        .populate({
+            path: 'productDetailArr',
+        })
+        .exec(async function (error, element) {
+            if (error) return res.status(400).json({message: error.message})
+            let amount = productNew.amount
+            for(let i = 0; i < element.productDetailArr.length; i++){
+                let producer_product_detail = await Product_producer_detail.findById(element.productDetailArr[i].id)
+                if(productNew.amount <= element.productDetailArr[i].amountLeft){
+                    producer_product_detail.amountLeft = producer_product_detail.amountLeft - amount
+                    await producer_product_detail.save();
+                    break;
+                }else{
+                    amount = amount - producer_product_detail.amountLeft
+                    producer_product_detail.amountLeft = 0
+                    await producer_product_detail.save();
+                }
+            }
+            await element.save();//?
+        });
 
         await Customer.findById(req.params.id)
         .populate('productArr')
         .exec(async function (error, element) {
             if (error) return res.status(400).json({message: error.message})
-            product.amount = product.amount - req.body.productArr.amount
-            await product.save();
+            // product.amount = product.amount - req.body.productArr.amount
+            // await product.save();
             await productNew.save();
-            console.log(element);
             await element.productArr.push(productNew);
-            console.log(productNew);
             const updatedCustomer = await element.save();
             res.json(updatedCustomer)
         });
+    } catch (error) {
+        res.status(400).json({message: error.message})
+    }
+})
+
+// Add product return to producer from customer
+router.post('/:cid/add/product/return/:pid', async (req, res) => {
+    try {
+        let product = await Product_customer.findById(req.params.pid)
+        product.amount = product.amount - req.body.amount
+
+        let productNew = await new Product_customer_return(req.body)
+        await product.save();
+        await productNew.save();
+        res.json('success')
+     
     } catch (error) {
         res.status(400).json({message: error.message})
     }
@@ -99,20 +143,47 @@ router.patch('/:id/product/:pid', async (req, res) => {
     switch (true) { 
         case req.body.barcode != null:
             product.barcode = req.body.barcode
+        case req.body.date != null:
+            product.date = req.body.date
         case req.body.name != null:
             product.name = req.body.name
         case req.body.amount != null:
             product.amount = req.body.amount
+        case req.body.measure != null:
+            product.measure = req.body.measure
         case req.body.buyPrice != null:
             product.buyPrice = req.body.buyPrice
-        case req.body.sellPrice != null:
-            product.sellPrice = req.body.sellPrice
-        case req.body.description != null:
-            product.description = req.body.description
+        case req.body.payed != null:
+            product.payed = req.body.payed
+        case req.body.unPayed != null:
+            product.unPayed = req.body.unPayed
+        case req.body.about != null:
+            product.about = req.body.about
         // default:
             // res.status(400).json({message: 'error in switch'})
     }
-
+    try {
+        const updatedProduct = await product.save()
+        res.json(updatedProduct)
+    } catch (error) {
+        res.status(400).json({message: error.message})
+    }
+})
+//Update one returned product of customer
+router.patch('/edit/return/product/:id', async (req, res) => {
+    let product = await Product_customer_return.findById(req.params.id);
+    switch (true) { 
+        case req.body.amount != null:
+            product.amount = req.body.amount
+        case req.body.measure != null:
+            product.measure = req.body.measure
+        case req.body.buyPrice != null:
+            product.buyPrice = req.body.buyPrice
+        case req.body.returnReason != null:
+            product.returnReason = req.body.returnReason
+        // default:
+            // res.status(400).json({message: 'error in switch'})
+    }
     try {
         const updatedProduct = await product.save()
         res.json(updatedProduct)
@@ -141,19 +212,26 @@ router.delete('/:id/product/:pid', async (req, res) => {
         .populate('productArr')
         .exec(async function (error, element) {
             if (error) return res.status(400).json({message: error.message})
-            console.log(element);
 
             let arrayIndex = await element.productArr.findIndex(function( currentValue ) {
                 return currentValue._id == req.params.pid; 
             })
-            console.log(arrayIndex);
             await product.remove();
             
             await element.productArr.splice(arrayIndex, 1);
-            console.log(element.productArr);
             await element.save()
             res.json({message: 'Product of customer deleted!', deleted: true})
         });
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+})
+//Delete one returned product of customer
+router.delete('/delete/return/product/:id', async (req, res) => {
+    try {
+        let product = await Product_customer_return.findById(req.params.id)
+        await product.remove();
+        res.json({message: 'Returned product of customer deleted!', deleted: true})
     } catch (error) {
         res.status(500).json({message: error.message})
     }

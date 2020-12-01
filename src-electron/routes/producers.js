@@ -150,8 +150,8 @@ router.patch('/:id/product/:pid', async (req, res) => {
             product.measure = req.body.measure
         // case req.body.buyPrice != null:
         //     product.buyPrice = req.body.buyPrice
-        // case req.body.sellPrice != null:
-        //     product.sellPrice = req.body.sellPrice
+        case req.body.sellPrice != null:
+            product.sellPrice = req.body.sellPrice
         case req.body.description != null:
             product.description = req.body.description
         // default:

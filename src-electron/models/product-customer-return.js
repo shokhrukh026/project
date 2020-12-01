@@ -3,15 +3,19 @@ const mongoose = require('mongoose')
 
 
 const schema = new mongoose.Schema({
-    barcode: {
-        type: String,
-        required: true,
-    },
     date: {
         type: String,
         required: true,
     },
-    product_id: {
+    returnDate: {
+        type: String,
+        required: true,
+    },
+    cid:{
+        type: String,
+        required: true,
+    },
+    ppid:{
         type: String,
         required: true,
     },
@@ -26,31 +30,39 @@ const schema = new mongoose.Schema({
     measure: {
         type: String,
         required: true,
-    },      
+    },
     buyPrice: {
         type: String,
         required: true,
     },
-    payed: {
+    returnReason: {
         type: String,
         required: true,
     },
-    unPayed: {
+    status: {
         type: String,
-        required: true,
-    },
+        required: false,
+    }
+    // payed: {
+    //     type: String,
+    //     required: true,
+    // },
+    // unPayed: {
+    //     type: String,
+    //     required: true,
+    // },
     // sellPrice: {
     //     type: Number,
     //     required: false,
     // },
-    about: {
-        type: String,
-        required: false,
-    },
+    // about: {
+    //     type: String,
+    //     required: false,
+    // },
     // productDetailArr: [{
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: Product_customer_detail
     // }]
 })
 
-module.exports = mongoose.model('products-customer', schema)
+module.exports = mongoose.model('products-customer-return', schema)

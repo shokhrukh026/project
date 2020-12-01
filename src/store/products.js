@@ -148,7 +148,7 @@ export default{
                     amount: payload.amount,
                     measure: payload.measure,
                     // buyPrice: payload.buyPrice,
-                    // sellPrice: payload.sellPrice,
+                    sellPrice: payload.sellPrice,
                     description: payload.description,
                 }
             })
@@ -170,7 +170,7 @@ export default{
                     amount: payload.amount,
                     amountLeft: payload.amountLeft,
                     buyPrice: payload.buyPrice,
-                    sellPrice: payload.sellPrice,
+                    // sellPrice: payload.sellPrice,
                     payed: payload.payed,
                     unPayed: payload.unPayed,
                     about: payload.about,

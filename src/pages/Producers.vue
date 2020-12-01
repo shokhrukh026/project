@@ -18,35 +18,35 @@
           color="primary"
           icon="filter_list"
           class="bg-white q-ml-sm text-weight-bold"
-          label="Add Filter"
+          label="Фильтры"
         >
           <q-list>
             <q-item clickable v-close-popup>
               <q-item-section>
-                <q-item-label>Filter 1</q-item-label>
+                <q-item-label>Фильтр 1</q-item-label>
               </q-item-section>
             </q-item>
 
             <q-item clickable v-close-popup>
               <q-item-section>
-                <q-item-label>Filter 2</q-item-label>
+                <q-item-label>Фильтр 2</q-item-label>
               </q-item-section>
             </q-item>
 
             <q-item clickable v-close-popup>
               <q-item-section>
-                <q-item-label>Filter 3</q-item-label>
+                <q-item-label>Фильтр 3</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
         </q-btn-dropdown>
-        <q-input class="float-right q-mt-sm q-mr-sm bg-white" v-model="search" label="Search here" outlined dense
+        <!-- <q-input class="float-right q-mt-sm q-mr-sm bg-white" v-model="search" label="Search here" outlined dense
                  style="width: 35%">
           <template v-slot:append>
             <q-icon v-if="search !== ''" name="close" @click="search = ''" class="cursor-pointer"/>
             <q-icon name="search"/>
           </template>
-        </q-input>
+        </q-input> -->
       </div>
     </div>
     <div class="col-12 q-ma-sm">
@@ -95,7 +95,7 @@
     <q-dialog v-model="dialogAdd" position="left">
       <q-card>
         <q-card-section>
-          <div class="text-h6 text-weight-bold q-pl-sm">Добавить поставщика</div>
+          <div class="text-h6 text-weight-bold q-pl-sm">Добавление поставщика</div>
         </q-card-section>
         <q-separator/>
         <q-card-section>
@@ -119,10 +119,10 @@
       </q-card>
     </q-dialog>
 
-     <q-dialog v-model="dialogEdit" position="right">
+     <q-dialog v-model="dialogEdit" position="left">
       <q-card>
         <q-card-section>
-          <div class="text-h6 text-weight-bold q-pl-sm">Редактировать поставщика</div>
+          <div class="text-h6 text-weight-bold q-pl-sm">Редактирование поставщика</div>
         </q-card-section>
         <q-separator/>
         <q-card-section>
@@ -136,7 +136,7 @@
               <q-btn
                 @click="editProducer"
                 class="q-ml-sm"
-                label="Добавить"
+                label="Изменить"
                 type="submit"
                 color="green"
               />
